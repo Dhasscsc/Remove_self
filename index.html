@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>சுய உறுதிமொழி பத்திரம்</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --secondary: #0d9488;
+      --gold: #eab308;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Latha', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 15px;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: var(--primary);
+      margin-top: 0;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 3px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    textarea { resize: vertical; min-height: 55px; font-family: inherit; }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 12px;
+      cursor: pointer;
+      color: white;
+      transition: opacity 0.2s;
+    }
+
+    button:hover { opacity: 0.9; }
+
+    .btn-print { background-color: var(--primary); }
+    .btn-blank { background-color: #4b5563; }
+    .btn-save { background-color: var(--secondary); }
+    .btn-clear { background-color: #dc2626; }
+
+    /* Printable Declaration Document Styling - full certificate frame */
+    .preview-doc {
+      position: relative;
+      background: white;
+      padding: 34px 40px 34px;
+      border: 2px solid var(--primary);
+      box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 6px var(--gold), inset 0 0 0 9px var(--primary);
+      font-size: 14px;
+      line-height: 1.6;
+      color: #000;
+    }
+
+    /* ===== Letterhead / Certificate-style header ===== */
+    .letterhead {
+      text-align: center;
+      padding: 2px 10px 12px;
+      margin-bottom: 14px;
+    }
+
+    .corner-decor {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      color: var(--primary);
+      opacity: 0.9;
+      z-index: 2;
+    }
+    .corner-decor.corner-tl { top: 14px; left: 14px; }
+    .corner-decor.corner-tr { top: 14px; right: 14px; transform: scaleX(-1); }
+    .corner-decor.corner-bl { bottom: 14px; left: 14px; transform: scaleY(-1); }
+    .corner-decor.corner-br { bottom: 14px; right: 14px; transform: scale(-1,-1); }
+    .corner-decor svg { width: 100%; height: 100%; }
+
+    .emblem-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 2px;
+    }
+    .emblem-line { flex: 1; max-width: 210px; height: 2px; background: var(--primary); }
+    .emblem-icon { width: 54px; height: 54px; flex-shrink: 0; }
+    .emblem-icon svg { width: 100%; height: 100%; }
+
+    .satyameva {
+      text-align: center;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .title-box-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .title-banners { text-align: center; }
+    .title-banner-main {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary), #1e40af);
+      border: 3px solid var(--gold);
+      border-radius: 30px;
+      padding: 8px 30px;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.18);
+    }
+
+    .bottom-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .bottom-divider .divider-line { flex: 1; height: 1px; background: var(--primary); }
+    .bottom-divider .divider-dot { color: var(--gold); font-size: 12px; }
+    /* ===== End letterhead ===== */
+
+    .parties-row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 12px;
+    }
+    .party-col { flex: 1; min-width: 0; }
+    .party-col h4 {
+      margin: 0 0 4px;
+      font-size: 12.5px;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .doc-section { margin-bottom: 10px; }
+    .doc-section p { margin: 2px 0; }
+
+    .fill-val {
+      font-weight: bold;
+      border-bottom: 1px dotted #000;
+      padding: 0 4px;
+    }
+
+    ol.doc-list {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    ol.doc-list li {
+      margin-bottom: 6px;
+      text-align: justify;
+    }
+
+    .signature-area {
+      margin-top: 35px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* History Table Styling */
+    .history-section {
+      margin-top: 20px;
+      border-top: 2px solid #e2e8f0;
+      padding-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    th { background-color: #f1f5f9; }
+
+    .action-btn {
+      padding: 2px 6px;
+      font-size: 10px;
+      margin-right: 2px;
+    }
+
+    /* Print Specific Fixes for Single Page Fit */
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm 15mm;
+      }
+      body * {
+        visibility: hidden;
+      }
+      .preview-card, .preview-card * {
+        visibility: visible;
+      }
+      .preview-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+        padding: 0;
+      }
+      .btn-group, h2, .history-section {
+        display: none !important;
+      }
+      .preview-doc {
+        padding: 26px 30px;
+        font-size: 13.5px;
+        line-height: 1.55;
+      }
+      .letterhead { padding: 0 10px 10px; margin-bottom: 12px; }
+      .signature-area { margin-top: 25px; }
+    }
+
+    @media (max-width: 768px) {
+      .container { grid-template-columns: 1fr; }
+      .parties-row { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Input Form -->
+  <div class="card">
+    <h2>சுய உறுதிமொழி தகவல்கள் உள்ளீடு</h2>
+
+    <div class="form-group">
+      <label>விண்ணப்பதாரர் பெயர்</label>
+      <input type="text" id="applicantName" placeholder="எ.கா: மு. சுப்பையா" oninput="updatePreview()">
+    </div>
+
+    <div class="form-group">
+      <label>தந்தை / கணவர் பெயர்</label>
+      <input type="text" id="fatherName" placeholder="எ.கா: ராமசாமி" oninput="updatePreview()">
+    </div>
+
+    <div class="form-group">
+      <label>முகவரி</label>
+      <input type="text" id="address" placeholder="கதவு எண், தெரு, ஊர்" oninput="updatePreview()">
+    </div>
+
+    <div class="form-group">
+      <label>செல்போன் எண்</label>
+      <input type="text" id="phone" placeholder="9876543210" oninput="updatePreview()">
+    </div>
+
+    <div class="form-group">
+      <label>குடும்ப அட்டை எண் (Ration Card No)</label>
+      <input type="text" id="smartCardNo" placeholder="33/XXXXXXXXXX" oninput="updatePreview()">
+    </div>
+
+    <div class="form-group">
+      <label>நியாயவிலைக் கடை எண் (Ration Shop No)</label>
+      <input type="text" id="shopNo" placeholder="எ.கா: 2712001" oninput="updatePreview()">
+    </div>
+
+    <hr style="margin: 10px 0; border:0; border-top: 1px solid #e2e8f0;">
+
+    <!-- Reason Selection -->
+    <div class="form-group">
+      <label>பெயர் நீக்கத்திற்கான காரணம்</label>
+      <select id="removalReason" onchange="toggleReasonFields(); updatePreview();">
+        <option value="death">இறப்பு (Death)</option>
+        <option value="separation">பிரிந்து வாழ்தல் (Living Separately)</option>
+        <option value="missing">காணவில்லை (Missing Person)</option>
+        <option value="other">இதர காரணம் (Other Reason)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>நீக்க வேண்டிய நபரின் பெயர்</label>
+      <input type="text" id="personName" placeholder="எ.கா: மாரியம்மாள்" oninput="updatePreview()">
+    </div>
+
+    <div class="form-group">
+      <label>வயது</label>
+      <input type="text" id="personAge" placeholder="எ.கா: 65" oninput="updatePreview()">
+    </div>
+
+    <div class="form-group">
+      <label>உறவுமுறை</label>
+      <input type="text" id="relationship" placeholder="எ.கா: தாய் / மனைவி" oninput="updatePreview()">
+    </div>
+
+    <!-- Conditional Date Input -->
+    <div class="form-group" id="dateGroup">
+      <label id="dateLabel">இறந்த நாள்</label>
+      <input type="date" id="eventDate" onchange="updatePreview()">
+    </div>
+
+    <!-- Conditional Other-Reason Text -->
+    <div class="form-group" id="otherReasonGroup" style="display:none;">
+      <label>காரணத்தை இங்கே விரிவாக பதியவும்</label>
+      <textarea id="otherReasonText" placeholder="உங்கள் காரணத்தை இங்கு எழுதவும்..." oninput="updatePreview()"></textarea>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="btn-group">
+      <button class="btn-print" onclick="window.print()">Print / PDF</button>
+      <button class="btn-blank" onclick="printBlankForm()">வெற்று படிவம் பிரிண்ட்</button>
+      <button class="btn-save" onclick="saveRecord()">வரலாற்றில் சேமி</button>
+      <button class="btn-clear" onclick="clearForm()">காலியாக்கு</button>
+    </div>
+
+    <!-- History / Saved Records Section -->
+    <div class="history-section">
+      <h2>சேமிக்கப்பட்ட பழைய வரலாறுகள்</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>பெயர்</th>
+            <th>கார்டு எண்</th>
+            <th>செயல்பாடு</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody">
+          <!-- History dynamic rows -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Document Preview Area -->
+  <div class="card preview-card">
+    <div class="preview-doc" id="documentView">
+
+      <!-- Certificate corner flourishes (whole-page frame) -->
+      <div class="corner-decor corner-tl">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4 Q4 30 30 30 Q4 30 4 56" stroke-linecap="round"/>
+          <path d="M4 4 Q30 4 30 30 Q30 4 56 4" stroke-linecap="round"/>
+          <circle cx="30" cy="30" r="3.2" fill="currentColor" stroke="none"/>
+          <circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="corner-decor corner-tr">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4 Q4 30 30 30 Q4 30 4 56" stroke-linecap="round"/>
+          <path d="M4 4 Q30 4 30 30 Q30 4 56 4" stroke-linecap="round"/>
+          <circle cx="30" cy="30" r="3.2" fill="currentColor" stroke="none"/>
+          <circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="corner-decor corner-bl">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4 Q4 30 30 30 Q4 30 4 56" stroke-linecap="round"/>
+          <path d="M4 4 Q30 4 30 30 Q30 4 56 4" stroke-linecap="round"/>
+          <circle cx="30" cy="30" r="3.2" fill="currentColor" stroke="none"/>
+          <circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+      <div class="corner-decor corner-br">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4 Q4 30 30 30 Q4 30 4 56" stroke-linecap="round"/>
+          <path d="M4 4 Q30 4 30 30 Q30 4 56 4" stroke-linecap="round"/>
+          <circle cx="30" cy="30" r="3.2" fill="currentColor" stroke="none"/>
+          <circle cx="10" cy="10" r="2" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+
+      <!-- Letterhead -->
+      <div class="letterhead">
+        <div class="emblem-row">
+          <span class="emblem-line"></span>
+          <span class="emblem-icon">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#1e3a8a" stroke-width="4"/>
+              <circle cx="50" cy="50" r="8" fill="#1e3a8a"/>
+              <g stroke="#1e3a8a" stroke-width="2.6">
+                <line x1="50" y1="8" x2="50" y2="92"/>
+                <line x1="8" y1="50" x2="92" y2="50"/>
+                <line x1="17.6" y1="17.6" x2="82.4" y2="82.4"/>
+                <line x1="17.6" y1="82.4" x2="82.4" y2="17.6"/>
+                <line x1="50" y1="8" x2="61" y2="21"/>
+                <line x1="50" y1="8" x2="39" y2="21"/>
+                <line x1="50" y1="92" x2="61" y2="79"/>
+                <line x1="50" y1="92" x2="39" y2="79"/>
+                <line x1="8" y1="50" x2="21" y2="61"/>
+                <line x1="8" y1="50" x2="21" y2="39"/>
+                <line x1="92" y1="50" x2="79" y2="61"/>
+                <line x1="92" y1="50" x2="79" y2="39"/>
+              </g>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#eab308" stroke-width="1.4"/>
+            </svg>
+          </span>
+          <span class="emblem-line"></span>
+        </div>
+        <div class="satyameva">சத்யமேவ ஜயதே</div>
+
+        <div class="title-box-wrap">
+          <div class="title-banners">
+            <div class="title-banner-main">சுய உறுதிமொழி பத்திரம்</div>
+          </div>
+        </div>
+
+        <div class="bottom-divider">
+          <span class="divider-line"></span><span class="divider-dot">❖</span><span class="divider-line"></span>
+        </div>
+      </div>
+      <!-- End Letterhead -->
+
+      <div class="parties-row">
+        <div class="doc-section party-col">
+          <h4>அனுப்புநர்</h4>
+          <span class="fill-val" id="p_applicantName">....................</span><br>
+          த/பெ: <span class="fill-val" id="p_fatherName">....................</span><br>
+          <span class="fill-val" id="p_address">....................</span><br>
+          செல்போன் எண்: <span class="fill-val" id="p_phone">....................</span>
+        </div>
+
+        <div class="doc-section party-col">
+          <h4>பெறுநர்</h4>
+          குடிமைப்பொருள் வட்டாட்சியர்,<br>
+          <strong>தூத்துக்குடி வட்டம்</strong>
+        </div>
+      </div>
+
+      <div style="margin: 10px 0;">
+        <strong>பொருள்:</strong> குடும்ப அட்டையிலிருந்து <span id="p_subjectText">இறந்தவரின் பெயரை</span> நீக்கம் செய்யக் கோருதல் - சுய உறுதிமொழி ஆவணம் சமர்ப்பித்தல் தொடர்பாக.
+      </div>
+
+      <p style="margin: 4px 0;">ஐயா / அம்மா,</p>
+
+      <p style="text-align: justify; margin: 4px 0;">
+        மேற்கண்ட முகவரியில் வசித்து வரும் <span class="fill-val" id="p_applicantName2">....................</span> ஆகிய நான், மனசாட்சிக்கு உட்பட்டு உண்மையாகவும் உறுதியாகவும் தெரிவிப்பது யாதெனில்:
+      </p>
+
+      <ol class="doc-list">
+        <li>எங்களது குடும்பத்தின் குடும்ப அட்டை எண்: <strong><span class="fill-val" id="p_smartCardNo">....................</span></strong></li>
+        <li>நாங்கள் அத்தியாவசியப் பொருட்கள் வாங்கும் நியாயவிலைக் கடை எண்: <strong><span class="fill-val" id="p_shopNo">....................</span></strong></li>
+
+        <!-- Dynamic List Item 3 -->
+        <li id="p_dynamicPoint3">
+          மேற்கண்ட எங்களது குடும்ப அட்டையில் உறுப்பினராகப் பதிவாகியுள்ள திரு / திருமதி / செல்வி <strong><span class="fill-val" id="p_personName">....................</span></strong> (வயது: <strong><span class="fill-val" id="p_personAge">...</span></strong>, உறவுமுறை: <strong><span class="fill-val" id="p_relationship">....................</span></strong>) அவர்கள் கடந்த <strong><span class="fill-val" id="p_eventDate">../../....</span></strong> அன்று இயற்கை எய்திவிட்டார்.
+        </li>
+
+        <!-- Dynamic List Item 4 & 5 -->
+        <span id="p_dynamicPoints45">
+          <li>அறியாமையின் காரணமாக இவரது இறப்பை உரிய காலத்தில் பதிவேட்டில் பதிவு செய்யத் தவறிவிட்டேன்.</li>
+          <li>எனவே, இறப்புச் சான்றிதழ் பெற இயலாத சூழ்நிலையில், எனது குடும்ப அட்டையிலிருந்து <strong><span class="fill-val" id="p_personName2">....................</span></strong> அவர்களின் பெயரை நீக்கம் செய்து தருமாறு கேட்டுக்கொள்கிறேன்.</li>
+        </span>
+
+        <li>மேலே குறிப்பிடப்பட்டுள்ள விவரங்கள் அனைத்தும் முற்றிலும் உண்மை என்றும், இதில் ஏதேனும் தவறு இருப்பின் அதற்கு நான் முழு பொறுப்பேற்கிறேன் என்றும் உறுதி அளிக்கிறேன்.</li>
+      </ol>
+
+      <div class="signature-area">
+        <div>
+          இடம்: தூத்துக்குடி<br>
+          நாள்: <span id="currentDate"></span>
+        </div>
+        <div style="text-align: center;">
+          <br><br>
+          (விண்ணப்பதாரரின் கையொப்பம்)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const fields = [
+    'applicantName', 'fatherName', 'address', 'phone',
+    'smartCardNo', 'shopNo', 'removalReason', 'personName', 'personAge',
+    'relationship', 'eventDate', 'otherReasonText'
+  ];
+
+  // Set Current Date automatically
+  const today = new Date().toLocaleDateString('en-GB');
+  document.getElementById('currentDate').innerText = today;
+
+  // On Load
+  window.onload = function() {
+    toggleReasonFields();
+    renderHistory();
+  };
+
+  // Toggle reason fields visibility & labels
+  function toggleReasonFields() {
+    const reason = document.getElementById('removalReason').value;
+    const dateGroup = document.getElementById('dateGroup');
+    const dateLabel = document.getElementById('dateLabel');
+    const otherGroup = document.getElementById('otherReasonGroup');
+
+    dateGroup.style.display = 'none';
+    otherGroup.style.display = 'none';
+
+    if (reason === 'death') {
+      dateGroup.style.display = 'block';
+      dateLabel.innerText = 'இறந்த நாள்';
+    } else if (reason === 'missing') {
+      dateGroup.style.display = 'block';
+      dateLabel.innerText = 'காணாமல் போன நாள்';
+    } else if (reason === 'other') {
+      otherGroup.style.display = 'block';
+    }
+  }
+
+  // Real-time Preview Update
+  function updatePreview() {
+    const reason = document.getElementById('removalReason').value;
+    const personName = document.getElementById('personName').value.trim() || '....................';
+    const personAge = document.getElementById('personAge').value.trim() || '...';
+    const relationship = document.getElementById('relationship').value.trim() || '....................';
+    const otherReasonText = document.getElementById('otherReasonText').value.trim() || '....................';
+
+    let rawDate = document.getElementById('eventDate').value;
+    let formattedDate = '../../....';
+    if(rawDate) {
+      const parts = rawDate.split('-');
+      formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    // Common Text Fields Update
+    ['applicantName', 'fatherName', 'address', 'phone', 'smartCardNo', 'shopNo'].forEach(id => {
+      let val = document.getElementById(id).value.trim() || '....................';
+      if (id === 'applicantName') {
+        document.getElementById('p_applicantName').innerText = val;
+        document.getElementById('p_applicantName2').innerText = val;
+      } else {
+        const target = document.getElementById('p_' + id);
+        if (target) target.innerText = val;
+      }
+    });
+
+    // Reason specific Dynamic Texting
+    const subjectText = document.getElementById('p_subjectText');
+    const point3 = document.getElementById('p_dynamicPoint3');
+    const points45 = document.getElementById('p_dynamicPoints45');
+
+    if (reason === 'death') {
+      subjectText.innerText = 'இறந்தவரின் பெயரை';
+      point3.innerHTML = `மேற்கண்ட எங்களது குடும்ப அட்டையில் உறுப்பினராகப் பதிவாகியுள்ள திரு / திருமதி / செல்வி <strong><span class="fill-val">${personName}</span></strong> (வயது: <strong><span class="fill-val">${personAge}</span></strong>, உறவுமுறை: <strong><span class="fill-val">${relationship}</span></strong>) அவர்கள் கடந்த <strong><span class="fill-val">${formattedDate}</span></strong> அன்று இயற்கை எய்திவிட்டார்.`;
+      points45.innerHTML = `
+        <li>அறியாமையின் காரணமாக இவரது இறப்பை உரிய காலத்தில் பதிவேட்டில் பதிவு செய்யத் தவறிவிட்டேன்.</li>
+        <li>எனவே, இறப்புச் சான்றிதழ் பெற இயலாத சூழ்நிலையில், எனது குடும்ப அட்டையிலிருந்து <strong><span class="fill-val">${personName}</span></strong> அவர்களின் பெயரை நீக்கம் செய்து தருமாறு கேட்டுக்கொள்கிறேன்.</li>
+      `;
+    } else if (reason === 'separation') {
+      subjectText.innerText = 'பிரிந்து வாழ்பவரின் பெயரை';
+      point3.innerHTML = `மேற்கண்ட எங்களது குடும்ப அட்டையில் உறுப்பினராகப் பதிவாகியுள்ள திரு / திருமதி / செல்வி <strong><span class="fill-val">${personName}</span></strong> (வயது: <strong><span class="fill-val">${personAge}</span></strong>, உறவுமுறை: <strong><span class="fill-val">${relationship}</span></strong>) அவர்கள் குடும்ப சூழ்நிலை காரணமாக எங்களை விட்டுப் பிரிந்து தனியாக வாழ்ந்து வருகிறார்.`;
+      points45.innerHTML = `
+        <li>இவருடன் தற்போது எனக்கு எவ்வித தொடர்பும் இல்லாததால், இவரது பெயரை எனது குடும்ப அட்டையில் தொடர்வதில் சிரமம் உள்ளது.</li>
+        <li>எனவே, எனது குடும்ப அட்டையிலிருந்து <strong><span class="fill-val">${personName}</span></strong> அவர்களின் பெயரை நீக்கம் செய்து தருமாறு கேட்டுக்கொள்கிறேன்.</li>
+      `;
+    } else if (reason === 'missing') {
+      subjectText.innerText = 'காணாமல் போனவரின் பெயரை';
+      point3.innerHTML = `மேற்கண்ட எங்களது குடும்ப அட்டையில் உறுப்பினராகப் பதிவாகியுள்ள திரு / திருமதி / செல்வி <strong><span class="fill-val">${personName}</span></strong> (வயது: <strong><span class="fill-val">${personAge}</span></strong>, உறவுமுறை: <strong><span class="fill-val">${relationship}</span></strong>) அவர்கள் கடந்த <strong><span class="fill-val">${formattedDate}</span></strong> அன்றிலிருந்து காணாமல் போய்விட்டார்.`;
+      points45.innerHTML = `
+        <li>இவரை பல இடங்களில் தேடியும் இதுவரையிலும் எந்தவித தகவலும் கிடைக்கப்பெறவில்லை.</li>
+        <li>எனவே, எனது குடும்ப அட்டையிலிருந்து <strong><span class="fill-val">${personName}</span></strong> அவர்களின் பெயரை நீக்கம் செய்து தருமாறு கேட்டுக்கொள்கிறேன்.</li>
+      `;
+    } else if (reason === 'other') {
+      subjectText.innerText = 'கீழ்க்கண்ட நபரின் பெயரை';
+      point3.innerHTML = `மேற்கண்ட எங்களது குடும்ப அட்டையில் உறுப்பினராகப் பதிவாகியுள்ள திரு / திருமதி / செல்வி <strong><span class="fill-val">${personName}</span></strong> (வயது: <strong><span class="fill-val">${personAge}</span></strong>, உறவுமுறை: <strong><span class="fill-val">${relationship}</span></strong>) அவர்கள் தொடர்பாக பின்வரும் காரணத்தால் பெயர் நீக்கம் செய்யக் கோருகிறேன்: <strong><span class="fill-val">${otherReasonText}</span></strong>`;
+      points45.innerHTML = `
+        <li>எனவே, மேற்கண்ட காரணத்தின் அடிப்படையில் எனது குடும்ப அட்டையிலிருந்து <strong><span class="fill-val">${personName}</span></strong> அவர்களின் பெயரை நீக்கம் செய்து தருமாறு கேட்டுக்கொள்கிறேன்.</li>
+      `;
+    }
+  }
+
+  // Clear Form
+  function clearForm() {
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) {
+        if(el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = '';
+      }
+    });
+    toggleReasonFields();
+    updatePreview();
+  }
+
+  // Print Blank Form directly
+  function printBlankForm() {
+    clearForm();
+    setTimeout(() => {
+      window.print();
+    }, 200);
+  }
+
+  // Save Record to History Array in LocalStorage
+  function saveRecord() {
+    const applicantName = document.getElementById('applicantName').value.trim();
+    if (!applicantName) {
+      alert('தயவுசெய்து விண்ணப்பதாரர் பெயரையாவது உள்ளிடவும்!');
+      return;
+    }
+
+    const record = {};
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) record[id] = el.value;
+    });
+
+    let history = JSON.parse(localStorage.getItem('declaration_history') || '[]');
+    history.push(record);
+    localStorage.setItem('declaration_history', JSON.stringify(history));
+
+    alert('வரலாற்றில் வெற்றிகரமாக சேமிக்கப்பட்டது!');
+    renderHistory();
+  }
+
+  // Render Saved History
+  function renderHistory() {
+    const history = JSON.parse(localStorage.getItem('declaration_history') || '[]');
+    const tbody = document.getElementById('historyTableBody');
+    tbody.innerHTML = '';
+
+    if (history.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#64748b;">பழைய தகவல்கள் எதுவும் இல்லை</td></tr>';
+      return;
+    }
+
+    history.forEach((rec, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rec.applicantName || 'பெயரில்லை'}</td>
+        <td>${rec.smartCardNo || '-'}</td>
+        <td>
+          <button class="action-btn btn-save" onclick="loadRecord(${index})">Load</button>
+          <button class="action-btn btn-clear" onclick="deleteRecord(${index})">X</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Load selected Record from History
+  function loadRecord(index) {
+    const history = JSON.parse(localStorage.getItem('declaration_history') || '[]');
+    const record = history[index];
+    if (record) {
+      fields.forEach(id => {
+        if (document.getElementById(id)) {
+          document.getElementById(id).value = record[id] || '';
+        }
+      });
+      toggleReasonFields();
+      updatePreview();
+    }
+  }
+
+  // Delete Record from History
+  function deleteRecord(index) {
+    if (confirm('இந்த வரலாற்றை நீக்க விரும்புகிறீர்களா?')) {
+      let history = JSON.parse(localStorage.getItem('declaration_history') || '[]');
+      history.splice(index, 1);
+      localStorage.setItem('declaration_history', JSON.stringify(history));
+      renderHistory();
+    }
+  }
+</script>
+
+</body>
+</html>
